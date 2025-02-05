@@ -21,9 +21,11 @@ export const AboutHero = () => {
         <div className='w-full min-h-100vh relative flex justify-center items-center bg-[black] overflow-hidden '>
         <motion.img initial={{scale:1}} animate={{scale:1.1}} transition={{duration:5,delay:1, repeat: Infinity, repeatType: "reverse"}}
           src={Abouthero}  
-          className="w-[100%] opacity-80" 
+          className="w-[100%] opacity-65" 
         />
-        <div className='min-h-100vh absolute flex flex-col items-center gap-[30px]'><p className='text-[36px] font-bold text-[white]'>ABOUT US</p>
+        <div className='min-h-100vh absolute flex flex-col items-center gap-[30px]'>
+          <p className='text-[36px] font-bold text-[white]'>ABOUT US</p>
+          <p className='text-[32px] font-bold text-[white]'>Plant your queries, and we’ll help them grow into solutions!</p>
             
             </div>
             

@@ -9,6 +9,10 @@ import { Productdetails } from "../Product/Productdetails"
 import { Cartsection } from "../Cart/Cartsection"
 import { Payment } from "../Payment/Payment"
 import { ScrollToTop } from "../ScrollToTop"
+import { ToastContainer} from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
+import { Profile } from "../Login/Profile"
+import { Order } from "../Orders/Order"
 
 export const Routercomponent = () => {
     return (
@@ -25,10 +29,15 @@ export const Routercomponent = () => {
           <Route path="/Cartsection" element={<Cartsection/>}/>
           <Route path="/Cartsection/:id" element={<Cartsection/>}/>
           <Route path="/Payment" element={<Payment/>}/>
+          <Route path="/Order" element={<Order/>}/>
+          
        </Route>
        <Route path="/login" element={<Login/>}/>
+       <Route path="/Profile" element={<Profile/>}/>
+
   
         </Routes>
+        <ToastContainer/>
         
       </>
     )

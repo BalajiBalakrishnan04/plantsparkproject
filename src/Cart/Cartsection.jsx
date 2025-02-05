@@ -12,11 +12,11 @@ export const Cartsection = () => {
 
   return (
     <div className='w-full py-[70px] flex px-[70px] gap-[60px] '>
-        <div className='w-[65%]'>
+        <div className='w-[70%]'>
         <p className=' text-[#087620] flex justify-start text-[22px]'>YOUR CART</p>
 <Cartprodsection setTotalPrice={setTotalPrice}/>
         </div>
-        <div className='w-[35%]'>
+        <div className='w-[30%]'>
           <CartTotal totalPrice={ totalPrice }/>
                 </div>
         </div>
@@ -26,11 +26,23 @@ export const Cartsection = () => {
 
 export const CartTotal=({ totalPrice, hideCheckout })=>{
 
+  const checkValue = localStorage.getItem("plantsparkuserdata");
+  const checkcart = JSON.parse(localStorage.getItem("cart"));
   const navigate = useNavigate();
   const handleCheckout = () => {
+    if (checkcart && checkcart.length > 0) {
+    if(checkValue){
     navigate('/payment', { state: { totalPrice } });
+    } else{
+      navigate('/login');
+    }
+  } else {
+    // If the cart is empty, show a message
+    alert("Your cart is empty! Add some products before proceeding.");
+}
   };
 
+  
 
   const formattedTotalPrice = totalPrice ? totalPrice.toFixed(2) : '0.00';
   return(<div>
@@ -67,23 +79,38 @@ export const CartTotal=({ totalPrice, hideCheckout })=>{
     });
 
     const removeItem = (id) => {
-      const filteredCart = cart.filter((item) => item.id !== id);
+      const filteredCart = cart.filter((item) => item._id !== id);
       setCart(filteredCart);
       localStorage.setItem("cart", JSON.stringify(filteredCart));
-    };
+  
+      const newCartCount = filteredCart.reduce((acc, item) => acc + item.quantity, 0);
+      localStorage.setItem("cartCount", newCartCount);
+  
+      window.dispatchEvent(new Event("cartUpdated"));
+  };
 
     useEffect(() => {
-      const total = cart.reduce((acc, item) => acc + item.Price * item.quantity, 0);
+      const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
       setTotalPrice(total);
     }, [cart, setTotalPrice]);
 
     const updateQuantity = (id, newQuantity) => {
-      const updatedCart = cart.map((item) =>
-        item.id === id ? { ...item, quantity: Number(newQuantity) } : item
-      );
-      setCart(updatedCart);
-      localStorage.setItem("cart", JSON.stringify(updatedCart));
-    }
+      setCart((prevCart) => {
+          const updatedCart = prevCart.map((item) =>
+              item._id === id ? { ...item, quantity: Math.max(1, Number(newQuantity)) } : item
+          );
+
+          localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+          
+          const newCartCount = updatedCart.reduce((acc, item) => acc + item.quantity, 0);
+          localStorage.setItem("cartCount", newCartCount);
+          window.dispatchEvent(new Event("cartUpdated")); 
+
+          return updatedCart;
+      });
+  };
+
 
     return (
       <div className='w-full py-[20px] flex flex-col items-center'>
@@ -94,8 +121,8 @@ export const CartTotal=({ totalPrice, hideCheckout })=>{
         <div className=' w-full flex justify-between items-center text-[19px] py-[8px] px-[20px] '>
             
             <p>Products</p>
-            <p>Title</p>
-            <p>Price</p>
+            <p className='w-[18%] flex justify-center'>Title</p>
+            <p className= ''>Price</p>
             <p>Quantity</p>
             <p>Total Price</p>
             <p>Remove</p>
@@ -103,18 +130,18 @@ export const CartTotal=({ totalPrice, hideCheckout })=>{
           <div className=' w-full flex flex-col justify-between items-center text-[18px]  px-[10px] '>
            { cart.map((item, index) => (
             <div key={index}  className='w-full flex  justify-between items-center border-b-[1px] border-t-[1px] py-[10px] border-[#c2c0c0]'>
-            <div className='w-[41%] flex justify-between items-center'>
-              <img src={item.img} className='w-[100px] h-[80px]' />
-            <p>{item.Name}</p>
-            <p>$ {item.Price}</p></div>
-            <div className='w-[50%] flex gap-[100px] items-center'>
+            <div className='w-[50%] flex justify-between items-center'>
+              <img src={`http://localhost:2000/view/${item.filename}`}className='w-[100px] h-[80px]' />
+            <p className='px-[20px] text-center'>{item.ProductName}</p>
+            <p className='w-[25%] flex justify-center px-[10px]'>$ {item.price}</p></div>
+            <div className='w-[50%] flex gap-[80px] items-center'>
               <input type="number"  
-              className='w-[60px] h-[30px] border-[#bdbdbd] border-[2px] outline-none rounded-[5px] text-center'  
+              className='w-[60px] h-[30px] ml-[50px] border-[#bdbdbd] border-[2px] outline-none rounded-[5px] text-center'  
                 value={item.quantity}
-                onChange={(e) => updateQuantity(item.id, e.target.value)}
+                onChange={(e) => updateQuantity(item._id, e.target.value)}
                />
-            <p>$ {(item.Price * item.quantity).toFixed(2)}</p>
-            <RxCross2  className='text-[22px] cursor-pointer' onClick={() => removeItem(item.id)}/>
+            <p className=''>$ {(item.price * item.quantity).toFixed(2)}</p>
+            <RxCross2  className='text-[22px] cursor-pointer' onClick={() => removeItem(item._id)}/>
             </div>
             
             </div>
@@ -122,7 +149,10 @@ export const CartTotal=({ totalPrice, hideCheckout })=>{
             
           </div>
           </>)}
-          
+          <div className='w-full py-[30px]'>
+         <Link to={'/product'} className='no-underline text-inherit'> <button className='px-[15px] py-[5px]  [@media(min-width:500px)]:text-[17px] text-[15px] rounded-[10px] border-2 hover:border-[#7BD001] bg-[black] hover:text-[#7BD001]  text-[white] border-[white] cursor-pointer duration-200 ease-initial'>
+         Back To Product
+   </button> </Link></div>
       </div>
     )
   }

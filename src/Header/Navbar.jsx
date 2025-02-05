@@ -8,29 +8,29 @@ import { useState, useEffect } from "react";
 
 
 export const Navbar = () => {
-  const [cartCount, setCartCount] = useState(
-    () => parseInt(localStorage.getItem("cartCount")) || 0
-  );
+  const [cartCount, setCartCount] = useState(() => {
+    return parseInt(localStorage.getItem("cartCount")) || 0;
+});
 
-  useEffect(() => {
+useEffect(() => {
     const updateCartCount = () => {
-      setCartCount(parseInt(localStorage.getItem("cartCount")) || 0);
+        setCartCount(parseInt(localStorage.getItem("cartCount")) || 0);
     };
 
     window.addEventListener("cartUpdated", updateCartCount);
 
     return () => {
-      window.removeEventListener("cartUpdated", updateCartCount);
+        window.removeEventListener("cartUpdated", updateCartCount);
     };
-  }, []);
+}, []); 
 
-  const resetCart = () => {
-    localStorage.setItem("cartCount", 0); // Reset in localStorage
-    setCartCount(0); // Reset state
-    window.dispatchEvent(new Event("cartUpdated")); // Notify all components
-  };
+
 
   const location=useLocation();
+
+  const checkValue = localStorage.getItem("plantsparkuserdata");
+
+
 
   return (
     <div>
@@ -45,10 +45,12 @@ export const Navbar = () => {
          </ul>
          <div className='flex gap-[25px] items-center px-[20px]'>
          
-         <HiOutlineShoppingBag  className='text-[26px] hover:text-[#087620]' />
+         <Link to={'/Order'} className="no-underline text-inherit"><HiOutlineShoppingBag  className='text-[26px] hover:text-[#087620]' /></Link>
          <Link to={'/Cartsection'} className="no-underline text-inherit">
-         <div className='flex relative'><BsCart3 className='text-[26px] hover:text-[#087620]' onClick={resetCart}/><span className='z-10 w-[23px] h-[23px] flex justify-center items-center rounded-full bg-[#087620] absolute left-[18px] bottom-[12px] text-[15px] text-[white]'>{cartCount}</span></div></Link>
-         <Link to={'/login'} className="no-underline text-inherit"> <p className='flex gap-[8px] px-[10px] border-[1px] border-[black] hover:border-[#087620] rounded-[15px] py-[5px] hover:text-[#087620] cursor-pointer'>Login <FaRegUser className='text-[16px]' /></p></Link>
+         <div className='flex relative'><BsCart3 className='text-[26px] hover:text-[#087620]' /><span className='z-10 w-[23px] h-[23px] flex justify-center items-center rounded-full bg-[#087620] absolute left-[18px] bottom-[12px] text-[15px] text-[white]'>{cartCount}</span></div></Link>
+         {!checkValue?( <Link to={'/login'} className="no-underline text-inherit"> <p className='flex gap-[8px] px-[10px] border-[1px] border-[black] hover:border-[#087620] rounded-[15px] py-[5px] hover:text-[#087620] cursor-pointer'>Login <FaRegUser className='text-[16px]' /></p></Link>
+         ):(<Link to={'/profile'} className="no-underline text-inherit"> <p className='flex gap-[8px] px-[10px] border-[1px] border-[black] hover:border-[#087620] rounded-[15px] py-[5px] hover:text-[#087620] cursor-pointer'>Profile <FaRegUser className='text-[16px]' /></p></Link>
+         )}
          </div>
         </div>
     </div>

@@ -8,6 +8,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { Link } from 'react-router-dom';
 import {motion}  from "framer-motion";
 import { Pagination, Stack } from "@mui/material";
+import axios from 'axios';
 
 export const Product = () => {
   return (
@@ -23,9 +24,11 @@ export const ProductHero = () => {
         <div className='w-full min-h-100vh relative flex justify-center items-center bg-[black] overflow-hidden'>
         <motion.img initial={{scale:1}} animate={{scale:1.1}} transition={{duration:5,delay:1, repeat: Infinity, repeatType: "reverse"}}
           src={Hero2}  
-          className="w-[100%] opacity-75" 
+          className="w-[100%] opacity-60" 
         />
-        <div className='min-h-100vh absolute flex flex-col items-center gap-[30px]'><p className='  text-[36px] font-bold text-[white]'>SHOP NOW</p>
+        <div className='min-h-100vh absolute flex flex-col items-center gap-[20px]'>
+          <p className='text-[38px] font-bold text-[white]'>Explore Collections</p>
+          <p className='text-[32px] font-bold text-[white]'>Every plant is a step towards a greener world.</p>
             
             </div>
             
@@ -42,34 +45,27 @@ export const ProductHero = () => {
     "Foliage Plants",
     "Flowering Plants",
     "Indoor Plants",
-    "Mosses",
     "Outdoor Plants",
   ];
 
 
 
   export const ViewProductsection = () => {
-    const Productarr = [
-      { id:1, img: img1, Name: "Cactus Flower", Price: 10.22, category: "Herbs" },
-      { id:2, img: img2, Name: "Bouquet", Price: 15.99, category: "Bouquet" },
-      { id:3, img: img1, Name: "Bonsai plants", Price: 25.49, category: "Bonsai plants" },
-      { id:4, img: img2, Name: "Cacti", Price: 8.75, category: "Cacti" },
-      { id:5, img: img1, Name: "Foliage Plants", Price: 12.30, category: "Foliage Plants" },
-      { id:6, img: img2, Name: "Flowering Plants", Price: 18.99, category: "Flowering Plants" },
-      { id:7, img: img1, Name: "Indoor Plants", Price: 20.49, category: "Indoor Plants" },
-      { id:8, img: img2, Name: "Mosses", Price: 5.99, category: "Mosses" },
-      { id:9, img: img1, Name: "Cactus Flower", Price: 10.22, category: "Herbs" },
-      { id:10, img: img2, Name: "Bouquet", Price: 15.99, category: "Bouquet" },
-      { img: img1, Name: "Bonsai plants", Price: 25.49, category: "Bonsai plants" },
-      { img: img2, Name: "Cacti", Price: 8.75, category: "Cacti" },
-      { img: img1, Name: "Foliage Plants", Price: 12.30, category: "Foliage Plants" },
-      { img: img2, Name: "Flowering Plants", Price: 18.99, category: "Flowering Plants" },
-      { img: img1, Name: "Indoor Plants", Price: 20.49, category: "Indoor Plants" },
-      { img: img2, Name: "Mosses", Price: 5.99, category: "Mosses" },
-     
-      
-    ];
+    
   
+    const[product,setproduct]=useState([])
+    const Fetchproductdata=async()=>{
+      await axios.get("http://localhost:2000/getproduct",)
+      .then((res)=>setproduct(res.data))
+      .catch((err)=> toast.error(err.res.data.message))
+      .finally()
+  }
+  
+  useEffect(()=>{
+    Fetchproductdata();
+  },[])
+
+
 
 const [cartCount, setCartCount] = useState(
         () => parseInt(localStorage.getItem("cartCount")) || 0
@@ -94,7 +90,7 @@ const [cartCount, setCartCount] = useState(
               item.id === id ? { ...item, quantity: item.quantity + 1 } : item
             );
           } else {
-            const newItem = Productarr.find((item) => item.id === id);
+            const newItem = product.find((item) => item.id === id);
             return [...prevCart, { ...newItem, quantity: 1 }];
           }
         });
@@ -117,15 +113,16 @@ const [cartCount, setCartCount] = useState(
     };
   
     // Filter products based on selected categories
-    let filteredData = Productarr.filter((item) => 
-      (selectedFilters.length === 0 || selectedFilters.includes(item.category)) &&
-      item.Name.toLowerCase().includes(searchQuery.toLowerCase()) // 🔍 Search Filter
+    let filteredData = product.filter((item) => 
+      (selectedFilters.length === 0 || selectedFilters.includes(item.PlantType)) &&
+      item.ProductName
+      .toLowerCase().includes(searchQuery.toLowerCase()) // 🔍 Search Filter
   );
     // Sorting Logic
     if (sortOption === "price-low-high") {
-      filteredData = [...filteredData].sort((a, b) => a.Price - b.Price);
+      filteredData = [...filteredData].sort((a, b) => a.price - b.price);
     } else if (sortOption === "price-high-low") {
-      filteredData = [...filteredData].sort((a, b) => b.Price - a.Price);
+      filteredData = [...filteredData].sort((a, b) => b.price - a.price);
     }
   
     // Pagination Logic
@@ -194,15 +191,15 @@ const [cartCount, setCartCount] = useState(
             <div className="w-full grid grid-cols-3 gap-[30px] text-center p-[30px]">
               {paginatedData.map((item, index) => (
                 <div key={index} className="flex flex-col gap-[10px] items-center pb-[10px]  rounded-[8px] shadow-[0_2px_10px_#272626] relative group overflow-hidden">
-                  <Link to={`/productdetails/${item.id}`} className='no-underline text-inherit '> <img src={item.img} className="w-full h-[200px] rounded-t-[7px] hover:scale-105 transition ease-initial duration-400 "/></Link>
+                  <Link to={`/productdetails/${item._id}`} className='no-underline text-inherit '> <img src={`http://localhost:2000/view/${item.filename}`} className="w-full h-[200px] rounded-t-[7px] hover:scale-105 transition ease-initial duration-400 "/></Link>
                   {/* <p className="w-full min-h-100vh absolute bottom-[60px] text-[16px] bg-[black] py-[15px] text-[white] cursor-pointer flex justify-center gap-[15px] invisible group-hover:visible ease-in duration-400" 
               onClick={() => {setCartCount(cartCount + 1);
     addToCart(item.id);
 }}>
                     <BsCart3 />ADD TO CART
                   </p> */}
-                  <Link to={`/productdetails/${item.id}`} className='no-underline text-inherit '>  <p className="w-full text-[20px] indent-[15px] text-[black] text-center hover:text-[#087620]">{item.Name}</p>
-                  <p className="w-full text-[20px] indent-[15px] text-[black] text-center hover:text-[#087620]">${item.Price.toFixed(2)}</p>
+                  <Link to={`/productdetails/${item._id}`} className='no-underline text-inherit '>  <p className="w-full text-[20px] indent-[15px] text-[black] text-center hover:text-[#087620]">{item.ProductName}</p>
+                  <p className="w-full text-[20px] indent-[15px] text-[black] text-center hover:text-[#087620]">${item.price.toFixed(2)}</p>
                   </Link> </div>
               ))}
             </div>

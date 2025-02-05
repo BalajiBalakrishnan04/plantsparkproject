@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import contacthero from '../Assets/contact/contacthero.jpeg'
 import contactimg1 from '../Assets/contact/contactimg1.jpeg'
 import contactimg2 from '../Assets/contact/contactimg2.jpeg'
 import { TextField } from '@mui/material'
 import {motion}  from "framer-motion";
+import emailjs from '@emailjs/browser';
 import { IoIosArrowDown } from "react-icons/io";
 import {
     Accordion,
@@ -12,6 +13,7 @@ import {
     AccordionItemButton,
     AccordionItemPanel,
   } from 'react-accessible-accordion';
+import { toast } from 'react-toastify'
 
 export const Contact = () => {
   return (
@@ -59,7 +61,9 @@ export const Contacthero = () => {
           src={contacthero}  
           className="w-[100%] opacity-70" 
         />
-        <div className='min-h-100vh absolute flex flex-col items-center gap-[30px]'><p className='text-[36px] font-bold text-[white]'>CONTACT US</p>
+        <div className='min-h-100vh absolute flex flex-col items-center gap-[30px]'>
+          <p className='text-[36px] font-bold text-[white]'>CONTACT US</p>
+          <p className='text-[32px] font-bold text-[white]'>Your journey to a greener life starts here - reach out to us!</p>
             
             </div>
             
@@ -88,30 +92,73 @@ export const Contacthero = () => {
             </div>
     )
   }
+
+  const forminit = {
+    username: '',
+    email: '',
+    subject: '',
+    message: ''
+  };
+  
+
   export const Contactmsg = () => {
+    const form = useRef();
+    const [formdata, setformdata] = useState(forminit);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleChange = (e) => {
+    const { name, value } = e.target;
+    setformdata({ ...formdata, [name]: value });
+  };
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+
+    emailjs
+      .sendForm('service_k45fb3v', 'template_mwpx9fa', form.current, {
+        publicKey: 'Vz1-3jeJU3-lIUAIY',
+      })
+      .then(
+        () => {
+          toast.success('Message sent', { className: "w-1/5" });
+          setformdata(forminit);
+          form.current.reset();
+        },
+        (error) => {
+          toast.error(`Failed.. ${error.text || 'Something went wrong'}`, { className: "w-1/5" });
+        }
+      )
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
+
     return (
         <div className='w-full min-h-100vh relative flex flex-col justify-center items-center pt-[70px] pb-[30px] px-[70px] '>
            
-                  <div  className='w-full flex gap-[50px] items-center '>
+                  <div  className='w-full flex justify-center gap-[50px] items-center '>
                 
-                <div className='w-[50%] flex flex-col items-center'>
+                <div className='w-[50%] flex flex-col items-center  border-[1px] p-[20px] rounded-[10px] border-[#d8d6d6] shadow-[0_2px_8px_#dfdfdf]'>
                 <p className='text-[24px] text-[#087620] pb-[15px]'>GET IN TOUCH </p>
-                  <form className='w-[75%] flex flex-col items-center gap-[15px] border-[1px] p-[20px] rounded-[10px] border-[#d8d6d6] shadow-[0_2px_8px_#dfdfdf]'>
-                <div className='w-full flex gap-[15px]'><TextField id="username" label="Name" variant="outlined" type='text' name='username' sx={textFieldStyles} className='w-full'
+                  <form ref={form} onSubmit={sendEmail}  className='w-[75%] flex flex-col items-center gap-[20px] '>
+                <div className='w-full flex gap-[15px]'>
+                  <TextField id="username" label="Name" variant="outlined" type='text' name='username' value={formdata.username} onChange={handleChange} sx={textFieldStyles} className='w-full'
                     required/>
-                   <TextField id="email" label="E-mail" variant="outlined" type="email"  name='email' sx={textFieldStyles} className='w-full'
+                   <TextField id="email" label="E-mail" variant="outlined" type="email"  name='email' value={formdata.email} onChange={handleChange} sx={textFieldStyles} className='w-full'
                    required/></div>
-                   <TextField id="subject" label="Subject" variant="outlined" type='text' name='subject' sx={textFieldStyles} className='w-full'
+                   <TextField id="subject" label="Subject" variant="outlined" type='text' name='subject' value={formdata.subject} onChange={handleChange} sx={textFieldStyles} className='w-full'
                    required/> 
-                   <TextField id="message" label="Message" variant="outlined" type='text' name='message' sx={textFieldStyles} className='w-full'
+                   <TextField id="message" label="Message" variant="outlined" type='text' name='message' value={formdata.message} onChange={handleChange} sx={textFieldStyles} className='w-full'
                    required multiline/> 
-                    <button type='submit' className='px-[12px] py-[9px]  [@media(min-width:500px)]:text-[17px] text-[15px] rounded-[10px] border-2 hover:border-[#7BD001] bg-[black] hover:text-[#7BD001]  text-[white] border-[white] cursor-pointer duration-200 ease-initial'>
-  SEND MESSAGE          
+                    <button type='submit' disabled={isSubmitting} className='px-[12px] py-[9px]  [@media(min-width:500px)]:text-[17px] text-[15px] rounded-[10px] border-2 hover:border-[#7BD001] bg-[black] hover:text-[#7BD001]  text-[white] border-[white] cursor-pointer duration-200 ease-initial'>
+                    {isSubmitting ? 'SEND ME...' : 'SEND ME'}         
    </button>   
                    </form>              
                 </div>
                 <div className='w-[50%] flex justify-start'>
-                  <img src={contactimg2} className='w-[80%] rounded-[10px] '/>              
+                  <img src={contactimg2} className='w-[87%] rounded-[10px] '/>              
                    </div>
                 </div>
                     
