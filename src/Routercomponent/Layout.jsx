@@ -4,9 +4,9 @@ import { Footer } from "../Footer/Footer"
 
 export const Layout=()=>{
     return(<div className="w-full h-screen font-serif">
-        {/* <Navbar/> */}
+        <Navbar/>
         <div className="w-full min-h-100vh absolute top-[52px]">
-            {/* <Outlet/> */}
+            <Outlet/>
             <Footer/>
         </div>
         
