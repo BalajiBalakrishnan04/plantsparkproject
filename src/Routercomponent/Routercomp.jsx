@@ -13,6 +13,10 @@ import { ToastContainer} from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import { Profile } from "../Login/Profile"
 import { Order } from "../Orders/Order"
+import { Successfulpayment } from "../Payment/Statuspayment"
+// import { Elements } from '@stripe/react-stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
+
 
 export const Routercomponent = () => {
     return (
@@ -28,16 +32,22 @@ export const Routercomponent = () => {
           <Route path="/productdetails/:id" element={<Productdetails/>}/>
           <Route path="/Cartsection" element={<Cartsection/>}/>
           <Route path="/Cartsection/:id" element={<Cartsection/>}/>
-          <Route path="/Payment" element={<Payment/>}/>
+          <Route path="/payment" element={<Payment/>}/>
+          
           <Route path="/Order" element={<Order/>}/>
+          
           
        </Route>
        <Route path="/login" element={<Login/>}/>
        <Route path="/Profile" element={<Profile/>}/>
+       <Route path="/successorder" element={<Successfulpayment/>}/>
+       {/* <Route path="/failedorder" element={<Failedpayment/>}/> */}
 
   
         </Routes>
         <ToastContainer/>
+
+        
         
       </>
     )

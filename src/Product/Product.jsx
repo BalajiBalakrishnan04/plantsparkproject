@@ -36,21 +36,47 @@ export const ProductHero = () => {
     )
   }
 
-
-  const Prodcategories = [
-    "Herbs",
-    "Bouquet",
-    "Bonsai plants",
-    "Cacti",
-    "Foliage Plants",
-    "Flowering Plants",
-    "Indoor Plants",
-    "Outdoor Plants",
-  ];
+  
+  // const Prodcategories = [
+  //   "Herbs",
+  //   "Bouquet",
+  //   "Bonsai plants",
+  //   "Cacti",
+  //   "Foliage Plants",
+  //   "Flowering Plants",
+  //   "Indoor Plants",
+  //   "Outdoor Plants",
+  // ];
 
 
 
   export const ViewProductsection = () => {
+
+    const[categorydata,setcategorydata]=useState([])
+   
+  
+
+    const Fetchcategorydata=async(req,res)=>{
+      try {
+      await axios.get("http://localhost:2000/getcategories", )
+      .then((res)=>{
+        setcategorydata(Array.isArray(res.data) ? res.data : []);
+    })
+      .catch((err)=> toast.error(err.res.data.message))
+      .finally()
+       } catch (error) {
+            toast.error(error.res.data.message )
+          }
+        }
+  
+  
+  useEffect(()=>{
+    Fetchcategorydata();
+      
+  },[categorydata])
+    
+  
+
     
   
     const[product,setproduct]=useState([])
@@ -63,40 +89,40 @@ export const ProductHero = () => {
   
   useEffect(()=>{
     Fetchproductdata();
-  },[])
+  },[product])
 
 
 
-const [cartCount, setCartCount] = useState(
-        () => parseInt(localStorage.getItem("cartCount")) || 0
-      );
+// const [cartCount, setCartCount] = useState(
+//         () => parseInt(localStorage.getItem("cartCount")) || 0
+//       );
 
-      const [cart, setCart] = useState(() => {
-        return JSON.parse(localStorage.getItem("cart")) || [];
-      });
+//       const [cart, setCart] = useState(() => {
+//         return JSON.parse(localStorage.getItem("cart")) || [];
+//       });
     
-      useEffect(() => {
-        localStorage.setItem("cart", JSON.stringify(cart));
-        localStorage.setItem("cartCount", cartCount);
-        window.dispatchEvent(new Event("cartUpdated")); // Notify other components
-      }, [cart, cartCount]);
+//       useEffect(() => {
+//         localStorage.setItem("cart", JSON.stringify(cart));
+//         localStorage.setItem("cartCount", cartCount);
+//         window.dispatchEvent(new Event("cartUpdated")); // Notify other components
+//       }, [cart, cartCount]);
 
     
-      const addToCart = (id) => {
-        setCart((prevCart) => {
-          const existingItem = prevCart.find((item) => item.id === id);
-          if (existingItem) {
-            return prevCart.map((item) =>
-              item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-            );
-          } else {
-            const newItem = product.find((item) => item.id === id);
-            return [...prevCart, { ...newItem, quantity: 1 }];
-          }
-        });
+//       const addToCart = (id) => {
+//         setCart((prevCart) => {
+//           const existingItem = prevCart.find((item) => item.id === id);
+//           if (existingItem) {
+//             return prevCart.map((item) =>
+//               item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+//             );
+//           } else {
+//             const newItem = product.find((item) => item.id === id);
+//             return [...prevCart, { ...newItem, quantity: 1 }];
+//           }
+//         });
       
-        setCartCount(cartCount + 1);
-      };
+//         setCartCount(cartCount + 1);
+//       };
 
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedFilters, setSelectedFilters] = useState([]);
@@ -146,15 +172,15 @@ const [cartCount, setCartCount] = useState(
             </div>
           <div className="text-gray-800 flex flex-col gap-[15px] border-[2px] border-[#b4b3b3] px-[40px] py-[15px] rounded-[10px]">
           <p className="w-full  text-[16px] text-[#272626] py-[5px] ">CATEGORIES</p>
-            {Prodcategories.map((category) => (
-              <label key={category} className="flex items-center gap-[20px] rounded-[50px] ">
+            {categorydata.map((category) => (
+              <label key={category._id} className="flex items-center gap-[20px] rounded-[50px] ">
                 <input
                   type="checkbox"
                   className="w-5 h-5 rounded-md checked:bg-green-500"
-                  onChange={() => toggleFilter(category)}
-                  checked={selectedFilters.includes(category)}
+                  onChange={() => toggleFilter(category.Category)}
+                  checked={selectedFilters.includes(category.Category)}
                 />
-                <span className="text-[18px]">{category}</span>
+                <span className="text-[18px]">{category.Category}</span>
               </label>
             ))}
           </div>

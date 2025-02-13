@@ -1,9 +1,7 @@
 import React, { useRef, useState } from 'react'
-import contacthero from '../Assets/contact/contacthero.jpeg'
 import contactimg1 from '../Assets/contact/contactimg1.jpeg'
 import contactimg2 from '../Assets/contact/contactimg2.jpeg'
 import { TextField } from '@mui/material'
-import {motion}  from "framer-motion";
 import emailjs from '@emailjs/browser';
 import { IoIosArrowDown } from "react-icons/io";
 import {
@@ -18,7 +16,7 @@ import { toast } from 'react-toastify'
 export const Contact = () => {
   return (
    <div className='w-full min-h-100vh flex flex-col'>
-           <Contacthero/>
+      
           <Contactsect/>
           <Contactmsg/>
           <FAQSection/>
@@ -54,22 +52,7 @@ const textFieldStyles = {
 
 
 
-export const Contacthero = () => {
-    return (
-        <div className='w-full min-h-100vh relative flex justify-center items-center bg-[black] overflow-hidden '>
-        <motion.img initial={{scale:1}} animate={{scale:1.1}} transition={{duration:5,delay:1, repeat: Infinity, repeatType: "reverse"}}
-          src={contacthero}  
-          className="w-[100%] opacity-70" 
-        />
-        <div className='min-h-100vh absolute flex flex-col items-center gap-[30px]'>
-          <p className='text-[36px] font-bold text-[white]'>CONTACT US</p>
-          <p className='text-[32px] font-bold text-[white]'>Your journey to a greener life starts here - reach out to us!</p>
-            
-            </div>
-            
-            </div>
-    )
-  }
+
 
  export const Contactsect = () => {
     return (

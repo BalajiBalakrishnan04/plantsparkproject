@@ -19,7 +19,10 @@ export const Profile = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.clear()
+    localStorage.removeItem("plantsparkuserdata");
+    localStorage.removeItem("token");
+    localStorage.removeItem("cart");
+    localStorage.removeItem("cartCount");
     navigate("/Login");
   };
 

@@ -42,7 +42,6 @@ export const CartTotal=({ totalPrice, hideCheckout })=>{
 }
   };
 
-  
 
   const formattedTotalPrice = totalPrice ? totalPrice.toFixed(2) : '0.00';
   return(<div>
@@ -64,6 +63,7 @@ export const CartTotal=({ totalPrice, hideCheckout })=>{
         </div>
         {!hideCheckout && (
         <div className='w-full flex justify-center'>
+          
           <button onClick={handleCheckout} className='w-[180px] cursor-pointer py-[8px] flex justify-center text-[16px] my-[20px] text-[white] hover:border-[#7BD001] bg-[black] hover:text-[#7BD001] border-[2px] border-[#d6d5d5] rounded-[10px] ease-initial duration-300'>
             Proceed to Checkout
           </button>
@@ -72,8 +72,8 @@ export const CartTotal=({ totalPrice, hideCheckout })=>{
 }
 
   export const Cartprodsection = ({ setTotalPrice }) => {
-    const{id}=useParams(); 
-    console.log(id)
+    // const{id}=useParams(); 
+    // console.log(id)
     const [cart, setCart] = useState(() => {
       return JSON.parse(localStorage.getItem("cart")) || [];
     });

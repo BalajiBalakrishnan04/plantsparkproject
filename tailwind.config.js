@@ -5,7 +5,8 @@ export default {
       "./src/**/*.{js,ts,jsx,tsx}", // Ensure all components/pages are included
     ],
     theme: {
-      extend: {},
+      extend: {
+      },
     },
     corePlugins: {
       preflight: true, // Ensures Tailwind's default styles are applied

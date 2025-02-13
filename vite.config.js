@@ -7,12 +7,12 @@ import ViteImagemin from 'vite-plugin-imagemin';
 
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(),
+  plugins: [react(), tailwindcss(), 
     ViteImagemin({
       avif: {
         quality: 50, // Optional: Set image quality for AVIF
       },
     }),
   ],
-  
+ 
 });
