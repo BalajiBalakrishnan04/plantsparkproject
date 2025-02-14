@@ -18,7 +18,6 @@ export const Homesection = () => {
       <Servicesect/>
       <Journey/>
       <Gallerysection/>
-      
            
     </div>
   );

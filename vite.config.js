@@ -7,7 +7,6 @@ import ViteImagemin from 'vite-plugin-imagemin';
 
 
 export default defineConfig({
-  base: "/plantsparkproject/",
   plugins: [react(), tailwindcss(), 
     ViteImagemin({
       avif: {
@@ -15,5 +14,5 @@ export default defineConfig({
       },
     }),
   ],
- 
+ base:'/plantsparkproject'
 });
